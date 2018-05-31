@@ -1,0 +1,79 @@
+<configuration status="OFF" monitorInterval="60">
+	<Properties>
+		<!-- 配置日志文件输出目录 -->
+		<Property name="LOG_DEBUG">/home/demo/logs/debug</Property>
+		<Property name="LOG_BIZ">/home/demo/logs/biz</Property>
+	</Properties>
+	<CustomLevels>
+		<CustomLevel name="BIZ" intLevel="50" />
+	</CustomLevels>
+	<Appenders>
+		<!--这个输出控制台的配置-->
+		<Console name="Console" target="SYSTEM_OUT">
+			<PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level %class{36} %L %M - %msg%xEx%n"/>
+		</Console>
+
+		<!-- DEBUG日志格式 -->
+		<RollingRandomAccessFile name="ROLLING_DEBUG"
+								 fileName="${LOG_DEBUG}/hywin.log"
+								 filePattern="${LOG_DEBUG}/%d{yyyy-MM-dd-HH}-%i.log">
+			<!--
+                %d{yyyy-MM-dd HH:mm:ss, SSS} : 日志生产时间
+                %p : 日志输出格式
+                %c : logger的名称
+                %m : 日志内容，即 logger.info("message")
+                %n : 换行符
+                %C : Java类名
+                %L : 日志输出所在行数
+                %M : 日志输出所在方法名
+                hostName : 本地机器名
+                hostAddress : 本地ip地址
+             -->
+			<!--<PatternLayout pattern="%d %p %c{1.} [%t] %m%n"/>-->
+			<!-- 输出日志的格式 -->
+			<PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level %class{36} %L %M - %msg%xEx%n"/>
+			<Policies>
+				<TimeBasedTriggeringPolicy interval="1" modulate="true" />
+				<SizeBasedTriggeringPolicy size="10 MB"/>
+			</Policies>
+			<Filters>
+				<ThresholdFilter level="BIZ" onMatch="DENY" onMismatch="NEUTRAL"/>
+				<!--<ThresholdFilter level="debug" onMatch="ACCEPT" onMismatch="DENY"/>-->
+			</Filters>
+			<DefaultRolloverStrategy max="20"/>
+		</RollingRandomAccessFile>
+
+		<!-- INFO日志格式 -->
+		<RollingRandomAccessFile name="ROLLING_BIZ"
+								 fileName="${LOG_BIZ}/biz.log"
+								 filePattern="${LOG_BIZ}/%d{yyyy-MM-dd-HH}-%i.log">
+			<!-- 输出日志的格式 -->
+			<PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level %class{36} %L %M - %msg%xEx%n"/>
+			<Policies>
+				<TimeBasedTriggeringPolicy interval="1" modulate="true" />
+				<SizeBasedTriggeringPolicy size="10 MB"/>
+			</Policies>
+			<Filters>
+				<ThresholdFilter level="BIZ" onMatch="ACCEPT" onMismatch="DENY"/>
+			</Filters>
+			<DefaultRolloverStrategy max="20"/>
+		</RollingRandomAccessFile>
+	</Appenders>
+
+	<Loggers>
+		<!-- 配置日志的根节点 -->
+		<root level="debug">
+			<appender-ref ref="Console"/>
+			<appender-ref ref="ROLLING_DEBUG"/>
+			<appender-ref ref="ROLLING_BIZ"/>
+		</root>
+	</Loggers>
+
+	<!-- 第三方日志系统 -->
+		<!--<logger name="org.springframework.core" level="info"/>-->
+		<!--<logger name="org.springframework.beans" level="info"/>-->
+		<!--<logger name="org.springframework.context" level="info"/>-->
+		<!--<logger name="org.springframework.web" level="info"/>-->
+		<!--<logger name="org.apache.http" level="warn"/>-->
+
+</configuration>

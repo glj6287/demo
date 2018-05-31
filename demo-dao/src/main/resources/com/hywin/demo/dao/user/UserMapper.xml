@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+  <mapper namespace="com.hywin.demo.dao.user.UserDao">
+
+	<!-- 根据手机号获取用户ID -->
+	<select id="getNameById" resultType="String" parameterType="Long">
+		SELECT name FROM t_user WHERE id = #{id}
+	</select>
+
+	<select id="selectUserList" resultType="com.hywin.demo.user.pojo.User" parameterType="com.hywin.demo.user.pojo.User">
+		select user_code userCode, name FROM t_user
+		<if test="page != null">
+			limit #{page.offset}, #{page.limit}
+		</if>
+	</select>
+	
+  </mapper>
